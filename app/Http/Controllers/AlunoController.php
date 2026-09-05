@@ -13,11 +13,12 @@ class AlunoController extends Controller
 
     public function index()
     {
-        return self::$alunos;
+        return view('alunos.index', ['alunos' => self::$alunos]);
     }
     public function show($id)
     {
-        return self::$alunos[$id] ?? "Aluno não encontrado.";
+        $aluno = self::$alunos[$id] ?? null;
+        return view('alunos.show', ['aluno' => $aluno]);
     }
 
     public function create()
