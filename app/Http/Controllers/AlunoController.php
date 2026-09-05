@@ -5,7 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Aluno;
 use App\Http\Requests\AlunoRequest;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+abstract class Controller
+{
+    use AuthorizesRequests;
+}
 class AlunoController extends Controller
 {
     public function index()
@@ -22,32 +27,43 @@ class AlunoController extends Controller
 
     public function create()
     {
+        $this->authorize('create', Aluno::class);
         return view('alunos.create');
     }
 
-   public function store(AlunoRequest $request)
+    public function store(AlunoRequest $request)
 {
+    $this->authorize('create', Aluno::class);
+
     Aluno::create($request->validated());
     return redirect()->route('alunos.index')->with('sucesso', 'Aluno cadastrado com sucesso!');
 }
 
-    public function edit($id)
-    {
-        $aluno = Aluno::findOrFail($id);
-        return view('alunos.edit', compact('aluno'));
-    }
-
-    public function update(AlunoRequest $request, $id)
+public function edit($id)
 {
     $aluno = Aluno::findOrFail($id);
+    $this->authorize('update', $aluno);
+
+    return view('alunos.edit', compact('aluno'));
+}
+
+public function update(AlunoRequest $request, $id)
+{
+    $aluno = Aluno::findOrFail($id);
+    $this->authorize('update', $aluno);
+
     $aluno->update($request->validated());
     return redirect()->route('alunos.index')->with('sucesso', 'Aluno atualizado com sucesso!');
 }
 
-    public function destroy($id)
-    {
-        Aluno::findOrFail($id)->delete();
-        return redirect()->route('alunos.index')->with('sucesso', 'Aluno removido com sucesso!');
-    }
+
+public function destroy($id)
+{
+    $aluno = Aluno::findOrFail($id);
+    $this->authorize('delete', $aluno);
+
+    $aluno->delete();
+    return redirect()->route('alunos.index')->with('sucesso', 'Aluno removido com sucesso!');
+}
 }
 

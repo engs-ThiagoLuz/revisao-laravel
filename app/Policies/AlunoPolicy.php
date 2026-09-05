@@ -7,6 +7,7 @@ use App\Models\User;
 
 class AlunoPolicy
 {
+
     public function viewAny(User $user): bool
     {
         return true;
@@ -19,16 +20,16 @@ class AlunoPolicy
 
     public function create(User $user): bool
     {
-        return false;
+        return $user->role === 'admin';
     }
 
-    public function update(User $user, Aluno $aluno): bool
+       public function update(User $user, Aluno $aluno): bool
     {
-        return false;
+        return in_array($user->role, ['admin', 'professor']);
     }
 
     public function delete(User $user, Aluno $aluno): bool
     {
-        return false;
+        return $user->role === 'admin';
     }
 }
