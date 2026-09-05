@@ -9,8 +9,12 @@ class Aluno extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nome', 'email', 'curso'];
+    protected $fillable = ['nome', 'email', 'curso', 'curso_id'];
 
+    public function curso()
+{
+    return $this->belongsTo(Curso::class);
+}
     public function scopeDoCurso($query, string $curso)
     {
         return $query->where('curso', $curso);
@@ -26,3 +30,5 @@ class Aluno extends Model
         return $query->where('created_at', '>=', now()->subDays(7));
     }
 }
+
+    
