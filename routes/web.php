@@ -34,3 +34,21 @@ Route::get('/alunos-crud/{id}', [AlunoController::class, 'show']);
 Route::get('/alunos-crud/{id}/edit', [AlunoController::class, 'edit']);
 Route::put('/alunos-crud/{id}', [AlunoController::class, 'update']);
 Route::delete('/alunos-crud/{id}', [AlunoController::class, 'destroy']);
+
+use App\Models\Aluno;
+
+Route::get('/alunos/curso/{curso}', function ($curso) {
+    return Aluno::doCurso($curso)->get();
+});
+
+Route::get('/alunos/busca/{palavra}', function ($palavra) {
+    return Aluno::nomeContem($palavra)->get();
+});
+
+Route::get('/alunos/recentes', function () {
+    return Aluno::recentes()->get();
+});
+
+Route::get('/alunos/quantidade', function () {
+    return Aluno::count();
+});
