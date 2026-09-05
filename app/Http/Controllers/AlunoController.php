@@ -2,47 +2,65 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Aluno;
 use Illuminate\Http\Request;
 
 class AlunoController extends Controller
 {
-    private static array $alunos = [
-        1 => ['id' => 1, 'nome' => 'João Silva', 'email' => 'joao@email.com'],
-        2 => ['id' => 2, 'nome' => 'Maria Souza', 'email' => 'maria@email.com'],
-    ];
-
     public function index()
     {
-        return view('alunos.index', ['alunos' => self::$alunos]);
+        $alunos = Aluno::all();
+        return view('alunos.index', compact('alunos'));
     }
+
     public function show($id)
     {
-        $aluno = self::$alunos[$id] ?? null;
-        return view('alunos.show', ['aluno' => $aluno]);
+        $aluno = Aluno::findOrFail($id);
+        return view('alunos.show', compact('aluno'));
     }
 
     public function create()
     {
-        return "Formulário de criação de aluno.";
+        return view('alunos.create');
     }
 
     public function store(Request $request)
     {
-        return "Aluno cadastrado!";
+        $dados = $request->validate([
+            'nome' => 'required|string|max:255',
+            'email' => 'required|email|unique:alunos,email',
+            'curso' => 'required|string|max:255',
+        ]);
+
+        Aluno::create($dados);
+
+        return redirect()->route('alunos.index')->with('sucesso', 'Aluno cadastrado com sucesso!');
     }
 
     public function edit($id)
     {
-        return "Formulário de edição do aluno {$id}.";
+        $aluno = Aluno::findOrFail($id);
+        return view('alunos.edit', compact('aluno'));
     }
 
     public function update(Request $request, $id)
     {
-        return "Aluno {$id} atualizado";
+        $aluno = Aluno::findOrFail($id);
+
+        $dados = $request->validate([
+            'nome' => 'required|string|max:255',
+            'email' => 'required|email|unique:alunos,email,' . $aluno->id,
+            'curso' => 'required|string|max:255',
+        ]);
+
+        $aluno->update($dados);
+
+        return redirect()->route('alunos.index')->with('sucesso', 'Aluno atualizado com sucesso!');
     }
 
     public function destroy($id)
     {
-        return "Aluno {$id} removido ";
+        Aluno::findOrFail($id)->delete();
+        return redirect()->route('alunos.index')->with('sucesso', 'Aluno removido com sucesso!');
     }
 }

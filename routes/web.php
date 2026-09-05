@@ -1,5 +1,7 @@
 <?php
 
+
+use App\Models\Aluno;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AlunoController;
 
@@ -27,15 +29,7 @@ Route::get('/usuario/{id}', function ($id) {
     return "Usuário com ID: {$id}";
 });
 
-Route::get('/alunos-crud', [AlunoController::class, 'index']);
-Route::get('/alunos-crud/create', [AlunoController::class, 'create']);
-Route::post('/alunos-crud', [AlunoController::class, 'store']);
-Route::get('/alunos-crud/{id}', [AlunoController::class, 'show']);
-Route::get('/alunos-crud/{id}/edit', [AlunoController::class, 'edit']);
-Route::put('/alunos-crud/{id}', [AlunoController::class, 'update']);
-Route::delete('/alunos-crud/{id}', [AlunoController::class, 'destroy']);
-
-use App\Models\Aluno;
+Route::resource('alunos', AlunoController::class);
 
 Route::get('/alunos/curso/{curso}', function ($curso) {
     return Aluno::doCurso($curso)->get();
