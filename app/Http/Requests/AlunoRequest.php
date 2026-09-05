@@ -26,4 +26,16 @@ class AlunoRequest extends FormRequest
             'curso' => 'required|string|max:255',
         ];
     }
+
+    public function messages(): array
+{
+    return [
+        'nome.required' => 'O nome do aluno é obrigatório.',
+        'nome.max' => 'O nome não pode ter mais que 255 caracteres.',
+        'email.required' => 'O email é obrigatório.',
+        'email.email' => 'Informe um email válido.',
+        'email.unique' => 'Este email já está cadastrado.',
+        'curso.required' => 'O curso é obrigatório.',
+    ];
+}
 }
